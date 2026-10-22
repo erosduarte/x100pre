@@ -1,0 +1,14 @@
+{
+  "name": "x100pre-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:init": "node src/initDb.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.0",
+    "express": "^5.1.0"
+  }
+}

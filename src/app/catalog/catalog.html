@@ -1,0 +1,101 @@
+<main class="catalog">
+  <h1>Catálogo</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <label>
+      Nombre
+      <input type="text" formControlName="name" />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </label>
+
+    <label>
+      Descripción
+      <textarea rows="2" formControlName="description"></textarea>
+    </label>
+
+    <label>
+      Categoría
+      <select formControlName="category">
+        @for (c of categories; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Imagen (URL)
+      <input type="url" placeholder="https://..." formControlName="imageUrl" />
+      @if (form.controls.imageUrl.invalid) {
+        <small class="error">Debe ser una URL http o https</small>
+      }
+    </label>
+
+    <div class="row">
+      <label>
+        Precio
+        <input type="number" step="0.01" min="0" formControlName="price" />
+        @if (form.controls.price.touched && form.controls.price.invalid) {
+          <small class="error">El precio no puede ser negativo</small>
+        }
+      </label>
+
+      <label>
+        Stock
+        <input type="number" step="1" min="0" formControlName="stock" />
+        @if (form.controls.stock.touched && form.controls.stock.invalid) {
+          <small class="error">El stock debe ser un entero positivo</small>
+        }
+      </label>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" formControlName="active" />
+      Activo
+    </label>
+
+    <button type="submit" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Crear producto' }}</button>
+    @if (formError()) {
+      <p class="error">{{ formError() }}</p>
+    }
+  </form>
+
+  @if (loading()) {
+    <p>Cargando catálogo...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }} <button type="button" (click)="load()">Reintentar</button></p>
+  } @else if (products().length === 0) {
+    <p>El catálogo está vacío.</p>
+  } @else {
+    <section class="grid">
+      @for (p of products(); track p.id) {
+        <article class="card" [class.inactive]="!p.active">
+          @if (p.imageUrl) {
+            <img [src]="p.imageUrl" [alt]="p.name" />
+          } @else {
+            <div class="no-image">Sin imagen</div>
+          }
+          <div class="info">
+            <small class="category">{{ p.category }}</small>
+            <h3>{{ p.name }}</h3>
+            @if (p.description) {
+              <p class="desc">{{ p.description }}</p>
+            }
+            <p class="price">{{ p.price | currency }}</p>
+            <p class="meta">
+              @if (p.stock === 0) {
+                <span class="badge out">Agotado</span>
+              } @else {
+                <span class="badge">{{ p.stock }} disponibles</span>
+              }
+              @if (!p.active) {
+                <span class="badge off">Inactivo</span>
+              }
+            </p>
+          </div>
+        </article>
+      }
+    </section>
+  }
+</main>

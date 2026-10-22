@@ -1,0 +1,261 @@
+$ink: #111;
+$muted: #767676;
+$line: #e4e4e2;
+$surface: #f3f3f1;
+$font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+:host {
+  display: block;
+  background: #fff;
+  color: $ink;
+  font-family: $font;
+  min-height: 100vh;
+}
+
+.catalog {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+h1 {
+  margin: 0 0 2.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+// ---------- Formulario (panel de administración) ----------
+.form {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 640px;
+  margin: 0 auto 4rem;
+  padding: 2rem;
+  background: $surface;
+
+  label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+
+  input[type='text'],
+  input[type='number'],
+  input[type='url'],
+  select,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 0.85rem;
+    font: inherit;
+    font-size: 0.9rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: $ink;
+    background: #fff;
+    border: 1px solid transparent;
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: $ink;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  button[type='submit'] {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #fff;
+    background: $ink;
+    border: 1px solid $ink;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #fff;
+      color: $ink;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.check {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem !important;
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: $ink;
+  }
+}
+
+.error {
+  color: #b3261e;
+  font-size: 0.75rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+p.error button {
+  margin-left: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid $ink;
+  cursor: pointer;
+}
+
+// ---------- Grilla de productos ----------
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem 0.75rem;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 760px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 0.5rem;
+  }
+}
+
+.card {
+  position: relative;
+  background: transparent;
+  border: 0;
+
+  &.inactive {
+    opacity: 0.5;
+  }
+
+  img,
+  .no-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: $surface;
+    transition: transform 0.6s ease;
+  }
+
+  // la imagen hace zoom suave al pasar el mouse, sin salirse de su caja
+  &:hover img {
+    transform: scale(1.04);
+  }
+
+  .no-image {
+    display: grid;
+    place-items: center;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+}
+
+.card {
+  overflow: hidden;
+
+  .info {
+    padding: 0.9rem 0.25rem 0;
+  }
+}
+
+.category {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $muted;
+}
+
+.info h3 {
+  margin: 0.35rem 0 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.desc {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: $muted;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $muted;
+  background: transparent;
+  padding: 0;
+
+  &.out,
+  &.off {
+    padding: 0.2rem 0.55rem;
+  }
+
+  &.out {
+    color: #fff;
+    background: $ink;
+  }
+
+  &.off {
+    color: $ink;
+    border: 1px solid $ink;
+  }
+}
