@@ -1,3 +1,7 @@
+<header class="hero">
+  <img src="banner.png" alt="Este flow es x100pre" />
+</header>
+
 <main class="catalog">
   <h1>Catálogo</h1>
 
@@ -32,23 +36,26 @@
       }
     </label>
 
-    <div class="row">
-      <label>
-        Precio
-        <input type="number" step="0.01" min="0" formControlName="price" />
-        @if (form.controls.price.touched && form.controls.price.invalid) {
-          <small class="error">El precio no puede ser negativo</small>
-        }
-      </label>
+    <label>
+      Precio
+      <input type="number" step="0.01" min="0" formControlName="price" />
+      @if (form.controls.price.touched && form.controls.price.invalid) {
+        <small class="error">El precio no puede ser negativo</small>
+      }
+    </label>
 
-      <label>
-        Stock
-        <input type="number" step="1" min="0" formControlName="stock" />
-        @if (form.controls.stock.touched && form.controls.stock.invalid) {
-          <small class="error">El stock debe ser un entero positivo</small>
+    <fieldset class="sizes">
+      <legend>Tallas y stock</legend>
+      <div class="size-grid">
+        @for (s of sizeOptions(); track s) {
+          <label class="size-input">
+            <span>{{ s }}</span>
+            <input type="number" min="0" step="1" placeholder="—" [formControl]="stockControl(s)" />
+          </label>
         }
-      </label>
-    </div>
+      </div>
+      <small class="hint">Las tallas cambian según la categoría. Deja vacía la que no manejas; un 0 la marca como agotada.</small>
+    </fieldset>
 
     <label class="check">
       <input type="checkbox" formControlName="active" />
@@ -83,6 +90,11 @@
               <p class="desc">{{ p.description }}</p>
             }
             <p class="price">{{ p.price | currency }}</p>
+            <p class="size-list">
+              @for (sz of p.sizes; track sz.size) {
+                <span class="size-chip" [class.sold]="sz.stock === 0">{{ sz.size }}</span>
+              }
+            </p>
             <p class="meta">
               @if (p.stock === 0) {
                 <span class="badge out">Agotado</span>

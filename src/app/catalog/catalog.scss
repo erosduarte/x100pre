@@ -259,3 +259,84 @@ p.error button {
     border: 1px solid $ink;
   }
 }
+
+// ---------- Tallas ----------
+.sizes {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+
+  legend {
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.5rem;
+}
+
+.form .size-input {
+  gap: 0.25rem;
+  text-align: center;
+  color: $ink;
+
+  input {
+    text-align: center;
+    padding: 0.6rem 0.25rem;
+  }
+}
+
+.hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: $muted;
+}
+
+.size-list {
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.size-chip {
+  min-width: 1.6rem;
+  padding: 0.2rem 0.4rem;
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  border: 1px solid $ink;
+
+  &.sold {
+    color: $muted;
+    border-color: $line;
+    text-decoration: line-through;
+  }
+}
+
+// ---------- Banner superior ----------
+.hero {
+  width: 100%;
+  background: #121212; // mismo tono que los bordes de la imagen
+
+  img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 340px; // la imagen se ve completa, con todo su texto
+  }
+}
