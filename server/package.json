@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "db:init": "node src/initDb.js",
-    "start": "node src/index.js"
+    "db:init": "node --env-file=.env src/initDb.js",
+    "start": "node --env-file=.env src/index.js"
   },
   "dependencies": {
     "pg": "^8.13.0",

@@ -1,0 +1,211 @@
+$ink: #111;
+$muted: #767676;
+$line: #e4e4e2;
+$surface: #f3f3f1;
+$font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+.toolbar {
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  margin: 0 auto 2.5rem;
+}
+
+.search {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.9rem 2.6rem 0.9rem 1rem;
+    border: 1px solid $line;
+    background: #fff;
+    font-family: $font;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: $ink;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::placeholder {
+      color: $muted;
+    }
+
+    &:focus {
+      outline: 2px solid $ink;
+      outline-offset: -1px;
+    }
+
+    // Quitamos la "x" nativa; usamos la nuestra
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  .search-clear {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+    padding: 0.5rem 0.6rem;
+    background: transparent;
+    border: 0;
+    color: $muted;
+    cursor: pointer;
+
+    &:hover {
+      color: $ink;
+    }
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  background: #fff;
+  border: 1px solid $line;
+  font-family: $font;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink;
+  cursor: pointer;
+
+  .count {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: $muted;
+  }
+
+  &:hover {
+    border-color: $ink;
+  }
+
+  &.active {
+    background: $ink;
+    border-color: $ink;
+    color: #fff;
+
+    .count {
+      color: #c9c9c7;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $ink;
+    outline-offset: 2px;
+  }
+}
+
+.results,
+.no-results {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $muted;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.reset {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: $ink;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+// ---------- Eliminar desde la tarjeta ----------
+.card-actions {
+  display: contents; // no tapa la imagen: solo posiciona sus hijos sobre .media
+}
+
+.trash {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid $line;
+  color: $ink;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: #b3261e;
+    border-color: #b3261e;
+    color: #fff;
+  }
+}
+
+.delete-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: rgba(17, 17, 17, 0.82);
+  color: #fff;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .delete-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  button {
+    padding: 0.6rem 0.9rem;
+    font-family: $font;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .yes {
+    background: #b3261e;
+    border: 1px solid #b3261e;
+    color: #fff;
+  }
+
+  .no {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+  }
+}

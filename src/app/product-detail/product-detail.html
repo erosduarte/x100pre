@@ -1,0 +1,192 @@
+<header class="topbar">
+  <a routerLink="/" class="back">← Catálogo</a>
+  <span class="brand">x100pre</span>
+  <span class="mode">Administración</span>
+</header>
+
+@if (loading()) {
+  <p class="state">Cargando producto...</p>
+} @else if (error()) {
+  <div class="state">
+    <p class="error">{{ error() }}</p>
+    <a routerLink="/" class="link">Volver al catálogo</a>
+  </div>
+} @else if (product(); as p) {
+  <main class="detail">
+    <section class="gallery-wrap" aria-label="Imágenes del producto">
+      <div class="gallery">
+        @for (url of images(); track url) {
+          <figure class="tile">
+            <img [src]="url" [alt]="p.name + ' foto ' + ($index + 1)" />
+            @if ($index === 0) {
+              <span class="cover">Portada</span>
+            }
+            <div class="tile-actions">
+              @if ($index > 0) {
+                <button type="button" (click)="makeCover($index)">Hacer portada</button>
+              }
+              <button
+                type="button"
+                class="danger"
+                (click)="removeImage($index)"
+                aria-label="Quitar imagen"
+              >
+                ✕
+              </button>
+            </div>
+          </figure>
+        } @empty {
+          <div class="no-image">Este producto no tiene imágenes</div>
+        }
+      </div>
+
+      <div class="add-image">
+        <div class="add-row">
+          <input
+            type="url"
+            placeholder="https://... URL de la imagen"
+            [formControl]="newImage"
+            (keydown.enter)="addImage(); $event.preventDefault()"
+          />
+          <button
+            type="button"
+            (click)="addImage()"
+            [disabled]="images().length >= maxImages"
+          >
+            Agregar
+          </button>
+        </div>
+        @if (imageError()) {
+          <small class="error">{{ imageError() }}</small>
+        }
+        <small class="hint">{{ images().length }} / {{ maxImages }} imágenes</small>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <small class="category">{{ p.category }} · REF. {{ reference() }}</small>
+
+        <label>
+          Nombre
+          <input type="text" formControlName="name" />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <small class="error">El nombre es obligatorio</small>
+          }
+        </label>
+
+        <label>
+          Descripción
+          <textarea rows="4" formControlName="description"></textarea>
+        </label>
+
+        <label>
+          Precio
+          <input type="number" step="0.01" min="0" formControlName="price" />
+          @if (form.controls.price.touched && form.controls.price.invalid) {
+            <small class="error">El precio no puede ser negativo</small>
+          }
+        </label>
+
+        <label class="check">
+          <input type="checkbox" formControlName="active" />
+          Activo (visible en la tienda)
+        </label>
+
+        <div class="stock">
+          <div class="stock-head">
+            <span>Stock por talla</span>
+            <small>{{ totalStock() }} en total</small>
+          </div>
+
+          @for (r of rows(); track r.size) {
+            <div class="stock-row" [class.off]="r.stock === null">
+              <span class="size-name">{{ r.size }}</span>
+
+              @if (r.stock === null) {
+                <button type="button" class="link-btn" (click)="addSize(r.size)">
+                  + Manejar esta talla
+                </button>
+              } @else {
+                <div class="stepper">
+                  <button
+                    type="button"
+                    (click)="stepStock(r.size, -1)"
+                    [disabled]="r.stock === 0"
+                    [attr.aria-label]="'Quitar una unidad de la talla ' + r.size"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    [value]="r.stock"
+                    (change)="setStock(r.size, $event)"
+                    [attr.aria-label]="'Stock talla ' + r.size"
+                  />
+                  <button
+                    type="button"
+                    (click)="stepStock(r.size, 1)"
+                    [attr.aria-label]="'Agregar una unidad a la talla ' + r.size"
+                  >
+                    +
+                  </button>
+                </div>
+                @if (r.stock === 0) {
+                  <span class="sold">Agotada</span>
+                }
+                <button
+                  type="button"
+                  class="icon-btn"
+                  (click)="removeSize(r.size)"
+                  [attr.aria-label]="'Dejar de manejar la talla ' + r.size"
+                  title="Dejar de manejar esta talla"
+                >
+                  ✕
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary" [disabled]="saving() || !dirty()">
+            {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+          <button type="button" class="ghost" (click)="discard()" [disabled]="saving() || !dirty()">
+            Descartar
+          </button>
+        </div>
+
+        @if (dirty() && !saving()) {
+          <small class="hint">Tienes cambios sin guardar</small>
+        }
+        @if (saveError()) {
+          <p class="error">{{ saveError() }}</p>
+        }
+        @if (notice()) {
+          <p class="ok">{{ notice() }}</p>
+        }
+      </form>
+
+      <div class="danger-zone">
+        @if (confirmingDelete()) {
+          <p>¿Eliminar "{{ p.name }}" definitivamente? No se puede deshacer.</p>
+          <div class="actions">
+            <button type="button" class="danger-btn" (click)="remove()" [disabled]="deleting()">
+              {{ deleting() ? 'Eliminando...' : 'Sí, eliminar' }}
+            </button>
+            <button type="button" class="ghost" (click)="confirmingDelete.set(false)" [disabled]="deleting()">
+              Cancelar
+            </button>
+          </div>
+        } @else {
+          <button type="button" class="link-danger" (click)="confirmingDelete.set(true)">
+            Eliminar producto
+          </button>
+        }
+      </div>
+    </aside>
+  </main>
+}

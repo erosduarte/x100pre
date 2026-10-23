@@ -1,0 +1,468 @@
+$ink: #111;
+$muted: #767676;
+$line: #e4e4e2;
+$surface: #f3f3f1;
+$danger: #b3261e;
+$ok: #1e7a3c;
+$font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+:host {
+  display: block;
+  background: #fff;
+  color: $ink;
+  font-family: $font;
+  min-height: 100vh;
+}
+
+// ---------- Barra superior ----------
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid $line;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 5;
+
+  .back {
+    justify-self: start;
+    color: $ink;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .brand {
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .mode {
+    justify-self: end;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+}
+
+// ---------- Estados ----------
+.state {
+  padding: 5rem 1.5rem;
+  text-align: center;
+  color: $muted;
+}
+
+.error {
+  color: $danger;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.ok {
+  color: $ok;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.hint {
+  color: $muted;
+  font-size: 0.75rem;
+}
+
+.link {
+  color: $ink;
+}
+
+// ---------- Layout ----------
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  align-items: start;
+}
+
+// ---------- Galería editable ----------
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.tile {
+  position: relative;
+  margin: 0;
+
+  img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: $surface;
+    display: block;
+  }
+
+  .cover {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    padding: 0.25rem 0.55rem;
+    background: $ink;
+    color: #fff;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .tile-actions {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    display: flex;
+    gap: 0.4rem;
+
+    button {
+      padding: 0.35rem 0.6rem;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid $line;
+      font: inherit;
+      font-size: 0.7rem;
+      cursor: pointer;
+
+      &:hover {
+        border-color: $ink;
+      }
+
+      &.danger:hover {
+        background: $danger;
+        border-color: $danger;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.no-image {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  background: $surface;
+  color: $muted;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.add-image {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.25rem 1.5rem 2rem;
+
+  .add-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  input {
+    flex: 1;
+  }
+}
+
+// ---------- Panel ----------
+.panel {
+  position: sticky;
+  top: 4.2rem;
+  margin: 1.5rem 2rem 2rem 1.5rem;
+  padding: 1.75rem;
+  background: $surface;
+  display: grid;
+  gap: 1.5rem;
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+
+  form {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .category {
+    color: $muted;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    &.check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+input[type='text'],
+input[type='url'],
+input[type='number'],
+textarea {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid $line;
+  background: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  color: $ink;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid $ink;
+    outline-offset: -1px;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+// ---------- Stock ----------
+.stock {
+  display: grid;
+  gap: 0.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid $line;
+}
+
+.stock-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  small {
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: $muted;
+  }
+}
+
+.stock-row {
+  display: grid;
+  grid-template-columns: 3rem auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+
+  .size-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  &.off {
+    grid-template-columns: 3rem 1fr;
+
+    .size-name {
+      color: #b5b5b5;
+    }
+  }
+
+  .sold {
+    color: $danger;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: stretch;
+
+  button {
+    width: 2.1rem;
+    border: 1px solid $line;
+    background: #fff;
+    font: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: $ink;
+    }
+
+    &:disabled {
+      color: #c9c9c7;
+      cursor: not-allowed;
+    }
+  }
+
+  input {
+    width: 3.4rem;
+    padding: 0.45rem 0.25rem;
+    border-left: 0;
+    border-right: 0;
+    text-align: center;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+.icon-btn {
+  justify-self: end;
+  background: transparent;
+  border: 0;
+  color: $muted;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.35rem;
+
+  &:hover {
+    color: $danger;
+  }
+}
+
+.link-btn {
+  justify-self: start;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  color: $muted;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: $ink;
+  }
+}
+
+// ---------- Acciones ----------
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.primary,
+.danger-btn {
+  flex: 1;
+  padding: 1rem;
+  border: 0;
+  background: $ink;
+  color: #fff;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:disabled {
+    background: #c9c9c7;
+    cursor: not-allowed;
+  }
+}
+
+.danger-btn {
+  background: $danger;
+}
+
+.ghost {
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: 1px solid $ink;
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:disabled {
+    border-color: #c9c9c7;
+    color: #c9c9c7;
+    cursor: not-allowed;
+  }
+}
+
+.add-row button {
+  padding: 0 1.25rem;
+  background: $ink;
+  color: #fff;
+  border: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:disabled {
+    background: #c9c9c7;
+    cursor: not-allowed;
+  }
+}
+
+.danger-zone {
+  padding-top: 1.25rem;
+  border-top: 1px solid $line;
+  display: grid;
+  gap: 0.75rem;
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+}
+
+.link-danger {
+  justify-self: start;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  color: $danger;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+// ---------- Móvil ----------
+@media (max-width: 900px) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    position: static;
+    margin: 0;
+    max-height: none;
+  }
+}

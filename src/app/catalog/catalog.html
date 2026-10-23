@@ -28,13 +28,28 @@
       </select>
     </label>
 
-    <label>
-      Imagen (URL)
-      <input type="url" placeholder="https://..." formControlName="imageUrl" />
-      @if (form.controls.imageUrl.invalid) {
-        <small class="error">Debe ser una URL http o https</small>
+    <fieldset class="sizes" formArrayName="images">
+      <legend>Imágenes (URL)</legend>
+      @for (ctrl of form.controls.images.controls; track ctrl; let i = $index) {
+        <div class="image-row">
+          <input type="url" placeholder="https://..." [formControlName]="i" />
+          @if (form.controls.images.length > 1) {
+            <button type="button" class="icon-btn" (click)="removeImage(i)" aria-label="Quitar imagen">✕</button>
+          }
+        </div>
+        @if (ctrl.invalid) {
+          <small class="error">Debe ser una URL http o https</small>
+        }
       }
-    </label>
+      <button
+        type="button"
+        class="link-btn"
+        (click)="addImage()"
+        [disabled]="form.controls.images.length >= maxImages"
+      >
+        + Agregar otra imagen
+      </button>
+    </fieldset>
 
     <label>
       Precio
@@ -68,21 +83,119 @@
     }
   </form>
 
+  @if (products().length > 0) {
+    <section class="toolbar" aria-label="Buscar y filtrar productos">
+      <div class="search">
+        <input
+          type="search"
+          placeholder="Buscar por nombre o ID"
+          aria-label="Buscar producto por nombre o ID"
+          [value]="query()"
+          (input)="onSearch($event)"
+        />
+        @if (query()) {
+          <button type="button" class="search-clear" (click)="query.set('')" aria-label="Borrar búsqueda">✕</button>
+        }
+      </div>
+
+      <div class="chips" role="group" aria-label="Filtrar por categoría">
+        <button
+          type="button"
+          class="chip"
+          [class.active]="categoryFilter() === null"
+          [attr.aria-pressed]="categoryFilter() === null"
+          (click)="setCategory(null)"
+        >
+          Todas <span class="count">{{ products().length }}</span>
+        </button>
+        @for (c of filterCategories(); track c) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="categoryFilter() === c"
+            [attr.aria-pressed]="categoryFilter() === c"
+            (click)="setCategory(c)"
+          >
+            {{ c }} <span class="count">{{ categoryCounts().get(c) ?? 0 }}</span>
+          </button>
+        }
+      </div>
+
+      <p class="results">
+        {{ filtered().length }} de {{ products().length }} productos
+        @if (filtersActive()) {
+          · <button type="button" class="reset" (click)="clearFilters()">Limpiar filtros</button>
+        }
+      </p>
+    </section>
+  }
+
+  @if (deleteError()) {
+    <p class="error">{{ deleteError() }}</p>
+  }
+
   @if (loading()) {
     <p>Cargando catálogo...</p>
   } @else if (error()) {
     <p class="error">{{ error() }} <button type="button" (click)="load()">Reintentar</button></p>
   } @else if (products().length === 0) {
     <p>El catálogo está vacío.</p>
+  } @else if (filtered().length === 0) {
+    <p class="no-results">
+      Ningún producto coincide con tu búsqueda.
+      <button type="button" class="reset" (click)="clearFilters()">Limpiar filtros</button>
+    </p>
   } @else {
     <section class="grid">
-      @for (p of products(); track p.id) {
-        <article class="card" [class.inactive]="!p.active">
-          @if (p.imageUrl) {
-            <img [src]="p.imageUrl" [alt]="p.name" />
-          } @else {
-            <div class="no-image">Sin imagen</div>
-          }
+      @for (p of filtered(); track p.id) {
+        <article
+          class="card"
+          [class.inactive]="!p.active"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'Ver detalle de ' + p.name"
+          (click)="goToDetail(p)"
+          (keydown.enter)="goToDetail(p)"
+          (mouseenter)="startPreview(p)"
+          (mouseleave)="stopPreview()"
+        >
+          <div class="media">
+            <div class="card-actions" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()">
+              @if (confirmingId() === p.id) {
+                <div class="delete-confirm" role="alertdialog" [attr.aria-label]="'Eliminar ' + p.name">
+                  <p>¿Eliminar este producto?</p>
+                  <div class="delete-buttons">
+                    <button type="button" class="yes" (click)="confirmDelete(p)" [disabled]="deletingId() === p.id">
+                      {{ deletingId() === p.id ? 'Eliminando...' : 'Sí, eliminar' }}
+                    </button>
+                    <button type="button" class="no" (click)="cancelDelete()" [disabled]="deletingId() === p.id">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <button
+                  type="button"
+                  class="trash"
+                  (click)="askDelete(p)"
+                  [attr.aria-label]="'Eliminar ' + p.name"
+                  title="Eliminar producto"
+                >
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6" />
+                  </svg>
+                </button>
+              }
+            </div>
+            @if (p.images.length) {
+              <img [src]="p.images[previewIndex(p)]" [alt]="p.name" />
+            } @else {
+              <div class="no-image">Sin imagen</div>
+            }
+            @if (p.images.length > 1) {
+              <span class="photo-count">{{ p.images.length }} fotos</span>
+            }
+          </div>
           <div class="info">
             <small class="category">{{ p.category }}</small>
             <h3>{{ p.name }}</h3>
@@ -111,3 +224,48 @@
     </section>
   }
 </main>
+
+@if (selected(); as p) {
+  <div class="lightbox" (click)="close()" role="dialog" aria-modal="true" [attr.aria-label]="p.name">
+    <div class="lightbox-body" (click)="$event.stopPropagation()">
+      <button type="button" class="lightbox-close" (click)="close()" aria-label="Cerrar">✕</button>
+
+      <div class="stage">
+        @if (p.images.length > 1) {
+          <button type="button" class="nav prev" (click)="prev()" aria-label="Foto anterior">‹</button>
+        }
+        @if (p.images.length) {
+          <img [src]="p.images[activeIndex()]" [alt]="p.name + ' foto ' + (activeIndex() + 1)" />
+        } @else {
+          <div class="no-image">Este producto no tiene imágenes</div>
+        }
+        @if (p.images.length > 1) {
+          <button type="button" class="nav next" (click)="next()" aria-label="Foto siguiente">›</button>
+        }
+      </div>
+
+      @if (p.images.length > 1) {
+        <p class="counter">{{ activeIndex() + 1 }} / {{ p.images.length }}</p>
+        <div class="thumbs">
+          @for (url of p.images; track $index) {
+            <button
+              type="button"
+              class="thumb"
+              [class.active]="$index === activeIndex()"
+              (click)="activeIndex.set($index)"
+              [attr.aria-label]="'Ver foto ' + ($index + 1)"
+            >
+              <img [src]="url" alt="" />
+            </button>
+          }
+        </div>
+      }
+
+      <div class="caption">
+        <span class="category">{{ p.category }}</span>
+        <strong>{{ p.name }}</strong>
+        <span>{{ p.price | currency }}</span>
+      </div>
+    </div>
+  </div>
+}

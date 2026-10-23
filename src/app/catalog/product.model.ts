@@ -8,12 +8,14 @@ export interface Product {
   name: string;
   description: string;
   category: string;
-  imageUrl: string;
+  images: string[];
   price: number;
   active: boolean;
   sizes: ProductSize[];
   stock: number;
 }
+
+export const MAX_IMAGES = 10;
 
 export type NewProduct = Omit<Product, 'id' | 'stock'>;
 

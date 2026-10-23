@@ -7,7 +7,10 @@ export function createApp(repository) {
 
   app.use(express.json());
   app.get('/api/products', products.list);
+  app.get('/api/products/:id', products.get);
   app.post('/api/products', products.create);
+  app.put('/api/products/:id', products.update);
+  app.delete('/api/products/:id', products.remove);
 
   app.use((err, _req, res, _next) => {
     console.error(err);
