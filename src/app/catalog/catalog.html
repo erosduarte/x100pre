@@ -5,84 +5,6 @@
 <main class="catalog">
   <h1>Catálogo</h1>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-    <label>
-      Nombre
-      <input type="text" formControlName="name" />
-      @if (form.controls.name.touched && form.controls.name.invalid) {
-        <small class="error">El nombre es obligatorio</small>
-      }
-    </label>
-
-    <label>
-      Descripción
-      <textarea rows="2" formControlName="description"></textarea>
-    </label>
-
-    <label>
-      Categoría
-      <select formControlName="category">
-        @for (c of categories; track c) {
-          <option [value]="c">{{ c }}</option>
-        }
-      </select>
-    </label>
-
-    <fieldset class="sizes" formArrayName="images">
-      <legend>Imágenes (URL)</legend>
-      @for (ctrl of form.controls.images.controls; track ctrl; let i = $index) {
-        <div class="image-row">
-          <input type="url" placeholder="https://..." [formControlName]="i" />
-          @if (form.controls.images.length > 1) {
-            <button type="button" class="icon-btn" (click)="removeImage(i)" aria-label="Quitar imagen">✕</button>
-          }
-        </div>
-        @if (ctrl.invalid) {
-          <small class="error">Debe ser una URL http o https</small>
-        }
-      }
-      <button
-        type="button"
-        class="link-btn"
-        (click)="addImage()"
-        [disabled]="form.controls.images.length >= maxImages"
-      >
-        + Agregar otra imagen
-      </button>
-    </fieldset>
-
-    <label>
-      Precio
-      <input type="number" step="0.01" min="0" formControlName="price" />
-      @if (form.controls.price.touched && form.controls.price.invalid) {
-        <small class="error">El precio no puede ser negativo</small>
-      }
-    </label>
-
-    <fieldset class="sizes">
-      <legend>Tallas y stock</legend>
-      <div class="size-grid">
-        @for (s of sizeOptions(); track s) {
-          <label class="size-input">
-            <span>{{ s }}</span>
-            <input type="number" min="0" step="1" placeholder="—" [formControl]="stockControl(s)" />
-          </label>
-        }
-      </div>
-      <small class="hint">Las tallas cambian según la categoría. Deja vacía la que no manejas; un 0 la marca como agotada.</small>
-    </fieldset>
-
-    <label class="check">
-      <input type="checkbox" formControlName="active" />
-      Activo
-    </label>
-
-    <button type="submit" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Crear producto' }}</button>
-    @if (formError()) {
-      <p class="error">{{ formError() }}</p>
-    }
-  </form>
-
   @if (products().length > 0) {
     <section class="toolbar" aria-label="Buscar y filtrar productos">
       <div class="search">
@@ -135,13 +57,19 @@
   }
 
   @if (loading()) {
-    <p>Cargando catálogo...</p>
+    <p class="state">Cargando catálogo...</p>
   } @else if (error()) {
-    <p class="error">{{ error() }} <button type="button" (click)="load()">Reintentar</button></p>
+    <p class="state error">
+      {{ error() }}
+      <button type="button" class="reset" (click)="load()">Reintentar</button>
+    </p>
   } @else if (products().length === 0) {
-    <p>El catálogo está vacío.</p>
+    <p class="state">
+      El catálogo está vacío.
+      <a routerLink="/productos/nuevo" class="reset">Crear el primer producto</a>
+    </p>
   } @else if (filtered().length === 0) {
-    <p class="no-results">
+    <p class="state">
       Ningún producto coincide con tu búsqueda.
       <button type="button" class="reset" (click)="clearFilters()">Limpiar filtros</button>
     </p>
@@ -187,8 +115,9 @@
                 </button>
               }
             </div>
+
             @if (p.images.length) {
-              <img [src]="p.images[previewIndex(p)]" [alt]="p.name" />
+              <img [src]="p.images[previewIndex(p)]" [alt]="p.name" loading="lazy" />
             } @else {
               <div class="no-image">Sin imagen</div>
             }
@@ -196,6 +125,7 @@
               <span class="photo-count">{{ p.images.length }} fotos</span>
             }
           </div>
+
           <div class="info">
             <small class="category">{{ p.category }}</small>
             <h3>{{ p.name }}</h3>
@@ -224,48 +154,3 @@
     </section>
   }
 </main>
-
-@if (selected(); as p) {
-  <div class="lightbox" (click)="close()" role="dialog" aria-modal="true" [attr.aria-label]="p.name">
-    <div class="lightbox-body" (click)="$event.stopPropagation()">
-      <button type="button" class="lightbox-close" (click)="close()" aria-label="Cerrar">✕</button>
-
-      <div class="stage">
-        @if (p.images.length > 1) {
-          <button type="button" class="nav prev" (click)="prev()" aria-label="Foto anterior">‹</button>
-        }
-        @if (p.images.length) {
-          <img [src]="p.images[activeIndex()]" [alt]="p.name + ' foto ' + (activeIndex() + 1)" />
-        } @else {
-          <div class="no-image">Este producto no tiene imágenes</div>
-        }
-        @if (p.images.length > 1) {
-          <button type="button" class="nav next" (click)="next()" aria-label="Foto siguiente">›</button>
-        }
-      </div>
-
-      @if (p.images.length > 1) {
-        <p class="counter">{{ activeIndex() + 1 }} / {{ p.images.length }}</p>
-        <div class="thumbs">
-          @for (url of p.images; track $index) {
-            <button
-              type="button"
-              class="thumb"
-              [class.active]="$index === activeIndex()"
-              (click)="activeIndex.set($index)"
-              [attr.aria-label]="'Ver foto ' + ($index + 1)"
-            >
-              <img [src]="url" alt="" />
-            </button>
-          }
-        </div>
-      }
-
-      <div class="caption">
-        <span class="category">{{ p.category }}</span>
-        <strong>{{ p.name }}</strong>
-        <span>{{ p.price | currency }}</span>
-      </div>
-    </div>
-  </div>
-}

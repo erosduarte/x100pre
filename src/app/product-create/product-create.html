@@ -1,0 +1,94 @@
+<main class="page">
+  <h1>Nuevo producto</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form" autocomplete="off">
+    <label>
+      Nombre
+      <input type="text" formControlName="name" />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <small class="error">El nombre es obligatorio</small>
+      }
+    </label>
+
+    <label>
+      Descripción
+      <textarea rows="3" formControlName="description"></textarea>
+    </label>
+
+    <label>
+      Categoría
+      <select formControlName="category">
+        @for (c of categories; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </label>
+
+    <fieldset class="group" formArrayName="images">
+      <legend>Imágenes (URL)</legend>
+      @for (ctrl of form.controls.images.controls; track ctrl; let i = $index) {
+        <div class="image-row">
+          <input type="url" inputmode="url" placeholder="https://..." [formControlName]="i" />
+          @if (form.controls.images.length > 1) {
+            <button type="button" class="icon-btn" (click)="removeImage(i)" aria-label="Quitar imagen">✕</button>
+          }
+        </div>
+        @if (ctrl.invalid) {
+          <small class="error">Debe ser una URL http o https</small>
+        }
+      }
+      <button
+        type="button"
+        class="link-btn"
+        (click)="addImage()"
+        [disabled]="form.controls.images.length >= maxImages"
+      >
+        + Agregar otra imagen
+      </button>
+    </fieldset>
+
+    <label>
+      Precio
+      <input type="number" inputmode="decimal" step="0.01" min="0" formControlName="price" />
+      @if (form.controls.price.touched && form.controls.price.invalid) {
+        <small class="error">El precio no puede ser negativo</small>
+      }
+    </label>
+
+    <fieldset class="group">
+      <legend>Tallas y stock</legend>
+      <div class="size-grid">
+        @for (s of sizeOptions(); track s) {
+          <label class="size-input">
+            <span>{{ s }}</span>
+            <input type="number" inputmode="numeric" min="0" step="1" placeholder="—" [formControl]="stockControl(s)" />
+          </label>
+        }
+      </div>
+      <small class="hint">
+        Las tallas cambian según la categoría. Deja vacía la que no manejas; un 0 la marca como agotada.
+      </small>
+    </fieldset>
+
+    <label class="check">
+      <input type="checkbox" formControlName="active" />
+      Activo
+    </label>
+
+    <button type="submit" class="submit" [disabled]="saving()">
+      {{ saving() ? 'Guardando...' : 'Crear producto' }}
+    </button>
+
+    @if (formError()) {
+      <p class="error">{{ formError() }}</p>
+    }
+
+    @if (created(); as p) {
+      <p class="ok">
+        "{{ p.name }}" creado.
+        <a [routerLink]="['/producto', p.id]">Ver producto</a> ·
+        <a routerLink="/">Ir al catálogo</a>
+      </p>
+    }
+  </form>
+</main>

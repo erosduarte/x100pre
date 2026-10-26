@@ -1,1 +1,29 @@
+<header class="bar">
+  <button
+    type="button"
+    class="burger"
+    [class.open]="open()"
+    (click)="toggle()"
+    [attr.aria-expanded]="open()"
+    aria-controls="menu"
+    [attr.aria-label]="open() ? 'Cerrar menú' : 'Abrir menú'"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <a routerLink="/" class="brand">x100pre</a>
+  <span class="bar-spacer"></span>
+</header>
+
+@if (open()) {
+  <div class="backdrop" (click)="close()" aria-hidden="true"></div>
+}
+
+<nav id="menu" class="drawer" [class.open]="open()" [attr.inert]="open() ? null : ''" aria-label="Menú principal">
+  <p class="drawer-title">Administración</p>
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Catálogo</a>
+  <a routerLink="/productos/nuevo" routerLinkActive="active">Crear producto</a>
+</nav>
+
 <router-outlet />

@@ -2,139 +2,218 @@ $ink: #111;
 $muted: #767676;
 $line: #e4e4e2;
 $surface: #f3f3f1;
-$font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$danger: #b3261e;
 
 :host {
   display: block;
-  background: #fff;
-  color: $ink;
-  font-family: $font;
-  min-height: 100vh;
+}
+
+// ---------- Banner superior ----------
+.hero {
+  width: 100%;
+  background: #121212; // mismo tono que los bordes de la imagen
+
+  img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 340px; // la imagen se ve completa, con todo su texto
+
+    @media (max-width: 760px) {
+      max-height: 200px;
+    }
+  }
 }
 
 .catalog {
   max-width: 1400px;
   margin: 0 auto;
   padding: 3rem 1.5rem 5rem;
+
+  @media (max-width: 760px) {
+    padding: 2rem 1rem 4rem;
+  }
 }
 
 h1 {
-  margin: 0 0 2.5rem;
+  margin: 0 0 2rem;
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   text-align: center;
+
+  @media (max-width: 760px) {
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+  }
 }
 
-// ---------- Formulario (panel de administración) ----------
-.form {
+// ---------- Buscador y filtros ----------
+.toolbar {
   display: grid;
+  justify-items: center;
   gap: 1.1rem;
-  max-width: 640px;
-  margin: 0 auto 4rem;
-  padding: 2rem;
-  background: $surface;
+  margin: 0 auto 2.5rem;
 
-  label {
-    display: grid;
-    gap: 0.4rem;
+  @media (max-width: 760px) {
+    margin-bottom: 1.75rem;
+    gap: 0.9rem;
+  }
+}
+
+.search {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+
+  input {
+    width: 100%;
+    padding: 0.9rem 2.8rem 0.9rem 1rem;
+    border: 1px solid $line;
+    border-radius: 0;
+    background: #fff;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: $ink;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::placeholder {
+      color: $muted;
+    }
+
+    &:focus {
+      outline: 2px solid $ink;
+      outline-offset: -1px;
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    // 16px evita el zoom automático de iOS al enfocar el campo
+    @media (max-width: 760px) {
+      font-size: 16px;
+    }
+  }
+
+  .search-clear {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 2.75rem;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    color: $muted;
+    cursor: pointer;
+
+    &:hover {
+      color: $ink;
+    }
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+
+  // En el móvil: una sola fila que se desliza con el dedo
+  @media (max-width: 760px) {
+    width: calc(100% + 2rem);
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  background: #fff;
+  border: 1px solid $line;
+  border-radius: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink;
+  cursor: pointer;
+
+  .count {
     font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
     color: $muted;
   }
 
-  input[type='text'],
-  input[type='number'],
-  input[type='url'],
-  select,
-  textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.75rem 0.85rem;
-    font: inherit;
-    font-size: 0.9rem;
-    letter-spacing: normal;
-    text-transform: none;
-    color: $ink;
-    background: #fff;
-    border: 1px solid transparent;
-    border-radius: 0;
-    outline: none;
-    transition: border-color 0.2s;
-
-    &:focus {
-      border-color: $ink;
-    }
+  &:hover {
+    border-color: $ink;
   }
 
-  textarea {
-    resize: vertical;
-  }
-
-  button[type='submit'] {
-    margin-top: 0.5rem;
-    padding: 1rem;
-    font: inherit;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #fff;
+  &.active {
     background: $ink;
-    border: 1px solid $ink;
-    border-radius: 0;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    border-color: $ink;
+    color: #fff;
 
-    &:hover:not(:disabled) {
-      background: #fff;
-      color: $ink;
+    .count {
+      color: #c9c9c7;
     }
+  }
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: wait;
-    }
+  &:focus-visible {
+    outline: 2px solid $ink;
+    outline-offset: 2px;
   }
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.results {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $muted;
 }
 
-.check {
-  display: flex !important;
-  align-items: center;
-  gap: 0.6rem !important;
+.state {
+  margin: 0;
+  padding: 3rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $muted;
 
-  input {
-    width: 1rem;
-    height: 1rem;
-    accent-color: $ink;
+  &.error {
+    color: $danger;
   }
 }
 
 .error {
-  color: #b3261e;
-  font-size: 0.75rem;
-  letter-spacing: normal;
-  text-transform: none;
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: $danger;
 }
 
-p.error button {
-  margin-left: 0.5rem;
-  padding: 0.35rem 0.8rem;
-  font: inherit;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.reset {
+  padding: 0;
   background: transparent;
-  border: 1px solid $ink;
+  border: 0;
+  font: inherit;
+  color: $ink;
+  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -149,17 +228,23 @@ p.error button {
   }
   @media (max-width: 760px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem 0.5rem;
+    gap: 1.75rem 0.5rem;
   }
 }
 
 .card {
   position: relative;
+  overflow: hidden;
   background: transparent;
-  border: 0;
+  cursor: pointer;
 
   &.inactive {
     opacity: 0.5;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $ink;
+    outline-offset: 2px;
   }
 
   img,
@@ -172,9 +257,11 @@ p.error button {
     transition: transform 0.6s ease;
   }
 
-  // la imagen hace zoom suave al pasar el mouse, sin salirse de su caja
-  &:hover img {
-    transform: scale(1.04);
+  // zoom suave solo donde existe el mouse (no en pantallas táctiles)
+  @media (hover: hover) {
+    &:hover img {
+      transform: scale(1.04);
+    }
   }
 
   .no-image {
@@ -185,14 +272,27 @@ p.error button {
     text-transform: uppercase;
     color: $muted;
   }
-}
-
-.card {
-  overflow: hidden;
 
   .info {
     padding: 0.9rem 0.25rem 0;
   }
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-count {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .category {
@@ -209,6 +309,11 @@ p.error button {
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
+  @media (max-width: 760px) {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
 }
 
 .desc {
@@ -221,87 +326,17 @@ p.error button {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  // En el móvil se oculta para que las tarjetas queden compactas
+  @media (max-width: 760px) {
+    display: none;
+  }
 }
 
 .price {
   margin: 0 0 0.5rem;
   font-size: 0.85rem;
   font-weight: 400;
-}
-
-.meta {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.badge {
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: $muted;
-  background: transparent;
-  padding: 0;
-
-  &.out,
-  &.off {
-    padding: 0.2rem 0.55rem;
-  }
-
-  &.out {
-    color: #fff;
-    background: $ink;
-  }
-
-  &.off {
-    color: $ink;
-    border: 1px solid $ink;
-  }
-}
-
-// ---------- Tallas ----------
-.sizes {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-
-  legend {
-    padding: 0;
-    margin-bottom: 0.5rem;
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: $muted;
-  }
-}
-
-.size-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 0.5rem;
-}
-
-.form .size-input {
-  gap: 0.25rem;
-  text-align: center;
-  color: $ink;
-
-  input {
-    text-align: center;
-    padding: 0.6rem 0.25rem;
-  }
-}
-
-.hint {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.7rem;
-  letter-spacing: normal;
-  text-transform: none;
-  color: $muted;
 }
 
 .size-list {
@@ -326,227 +361,125 @@ p.error button {
   }
 }
 
-// ---------- Banner superior ----------
-.hero {
-  width: 100%;
-  background: #121212; // mismo tono que los bordes de la imagen
-
-  img {
-    display: block;
-    margin: 0 auto;
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 340px; // la imagen se ve completa, con todo su texto
-  }
-}
-
-// ---------- Imágenes del formulario ----------
-.image-row {
+.meta {
+  margin: 0;
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-
-  input {
-    flex: 1;
-  }
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-.icon-btn {
-  width: 2.5rem;
-  font: inherit;
-  color: $ink;
-  background: #fff;
-  border: 1px solid transparent;
-  cursor: pointer;
-
-  &:hover {
-    border-color: $ink;
-  }
-}
-
-.sizes small.error {
-  display: block;
-  margin: -0.25rem 0 0.5rem;
-}
-
-.link-btn {
-  display: inline-block;
-  margin-top: 0.25rem;
-  padding: 0.4rem 0;
-  font: inherit;
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: $ink;
-  background: none;
-  border: 0;
-  border-bottom: 1px solid $ink;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
-// ---------- Tarjeta clickeable ----------
-.card {
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid $ink;
-    outline-offset: 2px;
-  }
-}
-
-.media {
-  position: relative;
-  overflow: hidden;
-}
-
-.photo-count {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
-  padding: 0.2rem 0.5rem;
+.badge {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.7);
+  color: $muted;
+
+  &.out,
+  &.off {
+    padding: 0.2rem 0.55rem;
+  }
+
+  &.out {
+    color: #fff;
+    background: $ink;
+  }
+
+  &.off {
+    color: $ink;
+    border: 1px solid $ink;
+  }
 }
 
-// ---------- Galería (lightbox) ----------
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.96);
+// ---------- Eliminar desde la tarjeta ----------
+.card-actions {
+  display: contents; // no tapa la imagen: solo posiciona sus hijos sobre .media
 }
 
-.lightbox-body {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  color: #fff;
-}
-
-.lightbox-close {
+.trash {
   position: absolute;
-  top: -0.25rem;
-  right: 0;
+  top: 0.5rem;
+  right: 0.5rem;
   z-index: 2;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.1rem;
-  color: #fff;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-}
-
-.stage {
-  position: relative;
   display: grid;
   place-items: center;
-  margin-top: 2.5rem;
-  background: #000;
-
-  img {
-    display: block;
-    max-width: 100%;
-    max-height: 68vh;
-    object-fit: contain;
-  }
-
-  .no-image {
-    padding: 4rem 1rem;
-    background: transparent;
-    color: $muted;
-  }
-}
-
-.nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2.75rem;
-  height: 2.75rem;
-  font-size: 1.8rem;
-  line-height: 1;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.85);
-  }
-
-  &.prev {
-    left: 0.5rem;
-  }
-
-  &.next {
-    right: 0.5rem;
-  }
-}
-
-.counter {
-  margin: 0.75rem 0 0;
-  text-align: center;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: #bbb;
-}
-
-.thumbs {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  overflow-x: auto;
-}
-
-.thumb {
-  flex: 0 0 auto;
-  width: 56px;
-  height: 70px;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
-  background: #000;
-  border: 1px solid transparent;
-  opacity: 0.55;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid $line;
+  border-radius: 0;
+  color: $ink;
   cursor: pointer;
 
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  // más grande para el dedo
+  @media (pointer: coarse) {
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
-  &.active {
-    opacity: 1;
-    border-color: #fff;
+  &:hover,
+  &:focus-visible {
+    background: $danger;
+    border-color: $danger;
+    color: #fff;
   }
 }
 
-.caption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.delete-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: rgba(17, 17, 17, 0.85);
+  color: #fff;
+  text-align: center;
 
-  .category {
-    color: #aaa;
+  p {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .delete-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+
+    @media (max-width: 760px) {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  button {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .yes {
+    background: $danger;
+    border: 1px solid $danger;
+    color: #fff;
+  }
+
+  .no {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
   }
 }

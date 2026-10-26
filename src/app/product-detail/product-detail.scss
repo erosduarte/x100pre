@@ -11,46 +11,24 @@ $font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #fff;
   color: $ink;
   font-family: $font;
-  min-height: 100vh;
 }
 
-// ---------- Barra superior ----------
-.topbar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  padding: 1.1rem 1.5rem;
-  border-bottom: 1px solid $line;
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 5;
+// ---------- Migas de pan ----------
+.crumb {
+  padding: 1rem 1.5rem;
 
-  .back {
-    justify-self: start;
+  a {
     color: $ink;
     text-decoration: none;
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    padding: 0.5rem 0;
+    display: inline-block;
 
     &:hover {
       text-decoration: underline;
     }
-  }
-
-  .brand {
-    font-weight: 700;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-  }
-
-  .mode {
-    justify-self: end;
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: $muted;
   }
 }
 
@@ -178,13 +156,13 @@ $font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 // ---------- Panel ----------
 .panel {
   position: sticky;
-  top: 4.2rem;
-  margin: 1.5rem 2rem 2rem 1.5rem;
+  top: calc(56px + env(safe-area-inset-top, 0px) + 1rem);
+  margin: 0 2rem 2rem 1.5rem;
   padding: 1.75rem;
   background: $surface;
   display: grid;
   gap: 1.5rem;
-  max-height: calc(100vh - 6rem);
+  max-height: calc(100vh - 56px - 2rem);
   overflow-y: auto;
 
   form {
@@ -452,17 +430,91 @@ textarea {
 
 // ---------- Móvil ----------
 @media (max-width: 900px) {
+  .crumb {
+    padding: 0.5rem 1rem;
+  }
+
   .detail {
     grid-template-columns: 1fr;
   }
 
+  // Las fotos se deslizan de lado, como en una tienda móvil
   .gallery {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .tile {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+
+    .tile-actions button {
+      padding: 0.55rem 0.8rem;
+    }
+  }
+
+  .no-image {
+    flex: 1;
+  }
+
+  .add-image {
+    padding: 1rem;
   }
 
   .panel {
     position: static;
-    margin: 0;
     max-height: none;
+    overflow: visible;
+    margin: 0;
+    padding: 1.25rem 1rem 1rem;
+  }
+
+  // 16px evita el zoom automático de iOS al enfocar un campo
+  input[type='text'],
+  input[type='url'],
+  input[type='number'],
+  textarea {
+    font-size: 16px;
+  }
+
+  .stepper {
+    button {
+      width: 2.75rem;
+    }
+
+    input {
+      width: 4rem;
+      padding: 0.7rem 0.25rem;
+    }
+  }
+
+  .size-name {
+    font-size: 1rem;
+  }
+
+  // Los botones de guardar quedan siempre a la vista
+  .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    margin: 0 -1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    background: $surface;
+    border-top: 1px solid $line;
+  }
+
+  .danger-zone .actions {
+    position: static;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 }

@@ -1,0 +1,235 @@
+$ink: #111;
+$muted: #767676;
+$line: #e4e4e2;
+$surface: #f3f3f1;
+$danger: #b3261e;
+$ok: #1e7a3c;
+
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+
+  @media (max-width: 600px) {
+    padding: 1.5rem 0 3rem;
+  }
+}
+
+h1 {
+  margin: 0 0 2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+// ---------- Formulario ----------
+.form {
+  display: grid;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: $surface;
+
+  @media (max-width: 600px) {
+    padding: 1.5rem 1rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+
+  input[type='text'],
+  input[type='number'],
+  input[type='url'],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 0.85rem;
+    font: inherit;
+    font-size: 0.9rem;
+    letter-spacing: normal;
+    text-transform: none;
+    color: $ink;
+    background: #fff;
+    border: 1px solid transparent;
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: $ink;
+    }
+
+    // 16px evita el zoom automático de iOS al enfocar un campo
+    @media (max-width: 760px) {
+      font-size: 16px;
+    }
+  }
+
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23111' stroke-width='1.5'><path d='M1 1.5l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.5rem;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.check {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem !important;
+
+  input {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: $ink;
+  }
+}
+
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+
+  legend {
+    padding: 0;
+    margin-bottom: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $muted;
+  }
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.5rem;
+}
+
+.form .size-input {
+  gap: 0.25rem;
+  text-align: center;
+  color: $ink;
+
+  input {
+    text-align: center;
+    padding: 0.7rem 0.25rem;
+  }
+}
+
+.image-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.icon-btn {
+  width: 2.75rem;
+  color: $ink;
+  background: #fff;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $ink;
+  }
+}
+
+.link-btn {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.6rem 0;
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid $ink;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.hint {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: $muted;
+}
+
+.error {
+  margin: 0;
+  color: $danger;
+  font-size: 0.78rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.ok {
+  margin: 0;
+  color: $ok;
+  font-size: 0.85rem;
+
+  a {
+    color: $ink;
+  }
+}
+
+.submit {
+  padding: 1.1rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  background: $ink;
+  border: 1px solid $ink;
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #fff;
+    color: $ink;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+}
